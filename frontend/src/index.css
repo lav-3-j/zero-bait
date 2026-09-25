@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+
+  /* DEEP FOREST & EUCALYPTUS DESIGN TOKENS */
+  --bg-primary: #101713;       /* Deep Forest - Main website background */
+  --bg-secondary: #17211B;     /* Forest Slate - Navbar / sidebar / secondary */
+  --surface-card: #1D2922;     /* Moss Charcoal - Cards / panels / containers */
+  --text-primary: #E8EEE9;     /* Soft Ivory - Main headings / active labels */
+  --text-secondary: #A9B8AC;   /* Sage Gray - Paragraphs / metadata / descriptions */
+  --accent-primary: #79B89A;   /* Eucalyptus - Main buttons / active states / safe */
+  --accent-secondary: #B8C99B; /* Sage - Icons / secondary highlights / charts */
+  --status-caution: #C9AD72;   /* Muted Gold - Suspicious / needs review */
+  --status-threat: #B98282;    /* Dust Rose - Phishing detected / confirmed threat */
+  --border-forest: #2A382F;    /* Soft Forest Border - Dividers / input outlines */
+  --ivory-light: #F4F6F1;      /* Warm Ivory */
+
+  --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Card Surface */
+.forest-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-forest);
+  border-radius: 12px;
+  box-shadow: var(--shadow-subtle);
+  transition: all 0.2s ease;
+}
+
+.forest-card:hover {
+  border-color: var(--accent-primary);
+}
+
+/* Action Buttons */
+.btn-eucalyptus {
+  background-color: var(--accent-primary);
+  color: #101713;
+  border: 1px solid var(--accent-primary);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-eucalyptus:hover {
+  background-color: #8AC9AA;
+  transform: translateY(-1px);
+}
+
+.btn-forest-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-forest);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-forest-secondary:hover {
+  background-color: var(--surface-card);
+  border-color: var(--accent-secondary);
+  color: var(--accent-primary);
+}
+
+/* Cognitive Heatmap Spans */
+.highlight-span {
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-block;
+  margin: 1px 2px;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.highlight-span.high {
+  background-color: rgba(185, 130, 130, 0.22);
+  border-bottom: 2px solid var(--status-threat);
+  color: #F0BCBC;
+}
+
+.highlight-span.high:hover {
+  background-color: rgba(185, 130, 130, 0.4);
+}
+
+.highlight-span.medium {
+  background-color: rgba(201, 173, 114, 0.22);
+  border-bottom: 2px solid var(--status-caution);
+  color: #F5E1AF;
+}
+
+.highlight-span.medium:hover {
+  background-color: rgba(201, 173, 114, 0.4);
+}
+
+.highlight-span.low {
+  background-color: rgba(121, 184, 154, 0.18);
+  border-bottom: 2px solid var(--accent-primary);
+  color: #C0E8D4;
+}
+
+/* Custom Forest Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-forest);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
