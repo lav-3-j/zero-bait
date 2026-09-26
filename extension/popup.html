@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #101713;
+      color: #E8EEE9;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2A382F;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: #E8EEE9;
+      letter-spacing: -0.3px;
+    }
+    .badge {
+      background: #17211B;
+      color: #79B89A;
+      border: 1px solid #2A382F;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      background: #1D2922;
+      border: 1px solid #2A382F;
+      color: #E8EEE9;
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+      font-size: 12.5px;
+      resize: none;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #79B89A;
+      box-shadow: 0 0 0 2px rgba(121, 184, 154, 0.2);
+    }
+    textarea::placeholder {
+      color: #A9B8AC;
+      opacity: 0.7;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #79B89A;
+      color: #101713;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: #8ecaa8;
+    }
+    #results {
+      margin-top: 14px;
+      font-size: 12px;
+      display: none;
+    }
+    .threat-item {
+      background: #17211B;
+      border-left: 3px solid #B98282;
+      border-top: 1px solid #2A382F;
+      border-right: 1px solid #2A382F;
+      border-bottom: 1px solid #2A382F;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      border-radius: 0 6px 6px 0;
+      color: #A9B8AC;
+    }
+    .threat-item strong {
+      color: #B98282;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <span style="font-size: 18px;">🛡️</span>
+      <h1>ZeroBait Lens</h1>
+    </div>
+    <span class="badge">Engine Active</span>
+  </div>
+  
+  <textarea id="scan-input" placeholder="Paste suspicious message or email text here to scan for cognitive manipulation..."></textarea>
+  <button id="scan-btn">Scan for Phishing Intent</button>
+  
+  <div id="results">
+    <!-- Results populated here -->
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "ZeroBait Omni-Scanner",
+  "version": "1.0.0",
+  "description": "Zero Trust Meets Anti-Phishing. Highlight text and right click to scan for cognitive manipulation.",
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ZeroBait Threat Scanner"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
