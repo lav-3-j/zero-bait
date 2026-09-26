@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Smartphone, X, Copy, Check, ShieldCheck } from 'lucide-react';
+import { API_BASE } from '../config/api';
 
 interface MobileQrModalProps {
   isOpen: boolean;
@@ -7,21 +8,26 @@ interface MobileQrModalProps {
 }
 
 export const MobileQrModal: React.FC<MobileQrModalProps> = ({ isOpen, onClose }) => {
-  const [mobileUrl, setMobileUrl] = useState<string>('http://localhost:8000');
+  const [mobileUrl, setMobileUrl] = useState<string>(typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
   const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     if (isOpen) {
-      fetch('http://localhost:8000/api/v1/network-info', { credentials: 'include' })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.mobile_url) {
-            setMobileUrl(data.mobile_url);
-          }
-        })
-        .catch(() => {
-          setMobileUrl(window.location.origin);
-        });
+      if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+        // On cloud/production: judges scan QR to open the live public cloud website directly on their phone
+        setMobileUrl(window.location.origin);
+      } else {
+        fetch(`${API_BASE}/network-info`, { credentials: 'include' })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.mobile_url) {
+              setMobileUrl(data.mobile_url);
+            }
+          })
+          .catch(() => {
+            setMobileUrl(window.location.origin);
+          });
+      }
     }
   }, [isOpen]);
 

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZeroBait — High-Impact Hackathon Presentation</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2379B89A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>">
+  <style>
+    :root {
+      --bg: #101713;
+      --card-bg: #17211B;
+      --border: #2A382F;
+      --accent: #79B89A;
+      --muted: #A9B8AC;
+      --text: #E8EEE9;
+      --coral: #B98282;
+      --gold: #C9AD72;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 28px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(23, 33, 27, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button, .link-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    button:hover, .link-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-live {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+    }
+    .btn-live:hover {
+      background: #8fcbaa;
+      color: var(--bg);
+    }
+    .viewport {
+      flex: 1;
+      position: relative;
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 40px 60px;
+      display: none;
+      flex-direction: column;
+      justifyContent: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      overflow-y: auto;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+    .tag {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 17px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      max-width: 850px;
+      line-height: 1.4;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+    .big-stat {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .big-stat.accent { color: var(--accent); }
+    .big-stat.coral { color: var(--coral); }
+    .big-stat.gold { color: var(--gold); }
+    .card-label {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .card-desc {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    /* Hero on Slide 1 */
+    .hero-h1 {
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #FFFFFF 0%, #79B89A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .hero-desc {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 800px;
+      line-height: 1.5;
+      margin-bottom: 36px;
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      border-top: 1px solid var(--border);
+      background: rgba(23, 33, 27, 0.9);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      margin: 0 24px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      background: var(--accent);
+      width: 12.5%;
+      transition: width 0.3s ease;
+    }
+    @media print {
+      body { overflow: visible; height: auto; }
+      header, footer { display: none; }
+      .slide { display: flex !important; opacity: 1 !important; position: static !important; page-break-after: always; height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#79B89A" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span>ZeroBait &bull; Pitch Deck</span>
+    </div>
+    <div class="controls">
+      <button onclick="prev()">&#8592; Prev</button>
+      <button onclick="next()">Next &#8594;</button>
+      <button onclick="toggleFS()">⛶ Fullscreen</button>
+      <a href="https://zero-bait.onrender.com" target="_blank" class="link-btn btn-live">Open Live Product &#8599;</a>
+    </div>
+  </header>
+
+  <main class="viewport">
+
+    <!-- SLIDE 1: The Title -->
+    <section class="slide active">
+      <div class="tag">BEHAVIORAL CYBERSECURITY &bull; 2026</div>
+      <h1 class="hero-h1">ZeroBait</h1>
+      <div class="hero-sub">AI Phishing Defense Meets Cognitive Inoculation.</div>
+      <p class="hero-desc">Turning employees from the weakest link into an active human firewall across Email, Slack, and Mobile SMS.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">Live</div>
+          <div class="card-label">zero-bait.onrender.com</div>
+          <div class="card-desc">Fully deployed on cloud with verified multi-stage Docker runtime.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">&lt; 45ms</div>
+          <div class="card-label">Real-Time Inspection</div>
+          <div class="card-desc">Cognitive persuasion analysis before employees click or reply.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">SOC-2</div>
+          <div class="card-label">Supabase PostgreSQL</div>
+          <div class="card-desc">Immutable cloud audit logs providing certified compliance reporting.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: The Problem -->
+    <section class="slide">
+      <div class="tag">01 &bull; THE PROBLEM</div>
+      <h2 class="title">AI Doesn't Hack Software. It Hacks the Human Brain.</h2>
+      <p class="subtitle">Why $200B of legacy security gateways fail against modern spear-phishing.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat coral">$4.88M</div>
+          <div class="card-label">Average Breach Cost</div>
+          <div class="card-desc">Business Email Compromise (BEC) and executive wire fraud is the #1 financial loss vector in enterprise cybersecurity.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">0 Flags</div>
+          <div class="card-label">Bypasses Proofpoint &amp; SEG</div>
+          <div class="card-desc">AI writes flawless, authenticated emails with clean SPF/DKIM records. Legacy filters see zero spam keywords.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">82%</div>
+          <div class="card-label">Human Factor in Breaches</div>
+          <div class="card-desc">Annual 45-minute training videos have a 14-day memory decay. Employees forget the training and click anyway.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: The Comparison -->
+    <section class="slide">
+      <div class="tag">02 &bull; THE DIFFERENCE</div>
+      <h2 class="title">Replacing Broken Tools with Behavioral Defense</h2>
+      <p class="subtitle">Why legacy gateways and annual video training cannot stop AI persuasion.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat coral">Legacy Gateways</div>
+          <div class="card-label">Proofpoint / Defender</div>
+          <div class="card-desc">
+            &bull; Email only (Blind to Slack &amp; SMS).<br/>
+            &bull; Relies on static spam blacklists.<br/>
+            &bull; Silent pass-through teaches employees nothing.
+          </div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">Annual Videos</div>
+          <div class="card-label">KnowBe4 / PhishMe</div>
+          <div class="card-desc">
+            &bull; 45-minute boring compliance videos.<br/>
+            &bull; Punitive and hated by employees.<br/>
+            &bull; Zero protection in the active inbox.
+          </div>
+        </div>
+        <div class="card" style="border-color: var(--accent);">
+          <div class="big-stat accent">ZeroBait</div>
+          <div class="card-label">Cognitive Inoculation</div>
+          <div class="card-desc">
+            &bull; Omni-channel: Email, Slack, and SMS.<br/>
+            &bull; In-situ cognitive heatmap highlights traps.<br/>
+            &bull; 10-second micro-quizzes build real immunity.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: How It Works -->
+    <section class="slide">
+      <div class="tag">03 &bull; HOW IT WORKS</div>
+      <h2 class="title">Sub-45ms Real-Time Cognitive Pipeline</h2>
+      <p class="subtitle">From incoming message to employee immunity in three simple steps.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">1. Scan</div>
+          <div class="card-label">Cialdini Vector Analysis</div>
+          <div class="card-desc">Extracts psychological manipulation in &lt;25ms: Authority Bias, Urgency Deadlines, and Procedural SOP Bypass.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">2. Reveal</div>
+          <div class="card-label">Cognitive Heatmap</div>
+          <div class="card-desc">Highlights manipulation directly on screen in Red and Yellow so analysts and employees see the trap instantly.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">3. Immunize</div>
+          <div class="card-label">10-Second Micro-Coach</div>
+          <div class="card-desc">Instead of a 45-minute lecture, gives a 1-question scenario drill that locks in permanent behavioral defense.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: The Secret Weapon -->
+    <section class="slide">
+      <div class="tag">04 &bull; BEHAVIORAL SCIENCE</div>
+      <h2 class="title">William J. McGuire's Social Inoculation</h2>
+      <p class="subtitle">Vaccinating the human mind against psychological manipulation.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">Deconstruct</div>
+          <div class="card-label">Expose the Trick</div>
+          <div class="card-desc">Explains the trick in simple English: <em>"The attacker used urgency so you wouldn't pause to verify with the team."</em></div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">Contrast</div>
+          <div class="card-label">Show the Real Thing</div>
+          <div class="card-desc">Displays a side-by-side contrast with an authentic company notice so employees learn what genuine alerts look like.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">Test (8.2s)</div>
+          <div class="card-label">Active Recall Quiz</div>
+          <div class="card-desc">1 quick multiple-choice scenario. Passing awards an Inoculation Badge logged to Supabase for SOC-2 compliance.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Omni-Channel -->
+    <section class="slide">
+      <div class="tag">05 &bull; ATTACK SURFACE</div>
+      <h2 class="title">Defending Beyond the Email Gateway</h2>
+      <p class="subtitle">Because attackers strike wherever employees communicate.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">✉️ Email</div>
+          <div class="card-label">CEO Wire &amp; Invoices</div>
+          <div class="card-desc">Protects against Executive BEC, fake vendor payment redirections, and urgent credential traps.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">💬 &amp; 📱 Omni</div>
+          <div class="card-label">Slack &amp; SMS Smishing</div>
+          <div class="card-desc">
+            &bull; <strong>Slack:</strong> Catches internal bots asking for tokens.<br/>
+            &bull; <strong>SMS:</strong> Judges can scan our live QR code with their phone to test mobile smishing.
+          </div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">🧩 Lens</div>
+          <div class="card-label">Chrome Extension (MV3)</div>
+          <div class="card-desc">Right-click ANY text on webmail or websites to scan for manipulation with a floating glassmorphic overlay.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Business ROI -->
+    <section class="slide">
+      <div class="tag">06 &bull; BUSINESS VIABILITY</div>
+      <h2 class="title">High-Margin B2B SaaS with 50x Enterprise ROI</h2>
+      <p class="subtitle">Clear buyer, clear subscription pricing, and undeniable financial returns.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">$8 / Seat</div>
+          <div class="card-label">Enterprise Subscription</div>
+          <div class="card-desc">Per-user monthly B2B SaaS covering Email, Slack, SMS, and automated Socratic micro-drills.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">50x ROI</div>
+          <div class="card-label">Instant Break-Even</div>
+          <div class="card-desc">For a 1,000-seat company ($96k/yr), preventing just ONE $4.88M wire fraud pays for 50 years of ZeroBait.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">SOC-2</div>
+          <div class="card-label">Audit-Ready Logs</div>
+          <div class="card-desc">1-click CSV export proves active employee training to cyber insurance providers and compliance regulators.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Live Demo -->
+    <section class="slide">
+      <div class="tag">07 &bull; CONCLUSION &amp; LIVE DEMO</div>
+      <h2 class="title">Experience ZeroBait Right Now</h2>
+      <p class="subtitle">Production-ready, fully deployed, and available immediately.</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="big-stat accent">Cloud App</div>
+          <div class="card-label"><a href="https://zero-bait.onrender.com" target="_blank" style="color:var(--text); text-decoration: underline;">zero-bait.onrender.com</a></div>
+          <div class="card-desc">
+            &bull; Test CFO BEC wire fraud triage.<br/>
+            &bull; Try the 10-second McGuire quiz.<br/>
+            &bull; Test custom text in Live Inspector.
+          </div>
+        </div>
+        <div class="card">
+          <div class="big-stat gold">Phone Scan</div>
+          <div class="card-label">Interactive Mobile QR</div>
+          <div class="card-desc">Click 'Mobile QR' on screen &rarr; Scan with your phone &rarr; Test mobile smishing live on your device.</div>
+        </div>
+        <div class="card">
+          <div class="big-stat accent">Codebase</div>
+          <div class="card-label"><a href="https://github.com/lav-3-j/zero-bait" target="_blank" style="color:var(--text); text-decoration: underline;">github.com/lav-3-j/zero-bait</a></div>
+          <div class="card-desc">
+            &bull; 12 chronological commits.<br/>
+            &bull; Full Dockerfile &amp; Render configs.<br/>
+            &bull; Cloud Supabase DB integration verified.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div id="slide-num">Slide 1 of 8</div>
+    <div class="progress-bar">
+      <div class="fill" id="fill"></div>
+    </div>
+    <div>Use Arrow Keys (&#8592; / &#8594;) to Navigate</div>
+  </footer>
+
+  <script>
+    let cur = 0;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    const numEl = document.getElementById('slide-num');
+    const fillEl = document.getElementById('fill');
+
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+      numEl.innerText = `Slide ${cur + 1} of ${total}`;
+      fillEl.style.width = `${((cur + 1) / total) * 100}%`;
+    }
+
+    function next() {
+      if (cur < total - 1) { cur++; update(); }
+    }
+
+    function prev() {
+      if (cur > 0) { cur--; update(); }
+    }
+
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') next();
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prev();
+      else if (e.key === 'f' || e.key === 'F') toggleFS();
+    });
+  </script>
+</body>
+</html>

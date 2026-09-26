@@ -29,8 +29,7 @@ import {
   Award,
   CheckCircle2
 } from 'lucide-react';
-
-const API_BASE = 'http://localhost:8000/api/v1';
+import { API_BASE } from './config/api';
 
 type AppRoute = 'landing' | 'auth' | 'app';
 

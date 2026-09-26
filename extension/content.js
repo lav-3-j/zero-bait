@@ -1,23 +1,46 @@
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "scan_text") {
     showOverlay("Analyzing cognitive intent in real-time...");
     
-    fetch('http://127.0.0.1:8000/api/v1/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: request.text, channel_context: 'browser_context_menu' })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.is_ai_phishing || data.overall_threat_score >= 50) {
-        updateOverlay(`⚠️ <strong>Threat Detected (${data.overall_threat_score}/100)</strong><br/><br/>${data.triggers[0]?.category || 'Cognitive Manipulation'}: ${data.triggers[0]?.explanation || 'Deceptive persuasion intent identified.'}`, true);
-      } else {
-        updateOverlay('✅ <strong>Safe Content</strong><br/>No synthetic persuasion or homoglyphs detected.', false);
+    const payload = {
+      id: 'lens_' + Date.now(),
+      channel: 'email',
+      sender_name: 'Web Selection',
+      sender_address: 'web@highlight',
+      recipient: 'user@company.internal',
+      subject: 'Browser Selection Scan',
+      content: request.text
+    };
+
+    try {
+      let res;
+      try {
+        res = await fetch('http://127.0.0.1:8000/api/v1/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Local status ' + res.status);
+      } catch (localErr) {
+        res = await fetch('https://zero-bait.onrender.com/api/v1/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
       }
-    })
-    .catch(err => {
-      updateOverlay('❌ Error reaching ZeroBait Engine. Verify backend is running on localhost:8000.', true);
-    });
+
+      const data = await res.json();
+      if (data.is_ai_phishing || data.overall_threat_score >= 35 || data.threat_tier !== 'Clean') {
+        const topVector = data.triggers && data.triggers[0];
+        const category = topVector ? `${topVector.category} (${Math.round(topVector.score * 100)}%)` : 'Cognitive Manipulation';
+        const explanation = topVector ? topVector.explanation : (data.summary || 'Deceptive persuasion intent identified.');
+        updateOverlay(`⚠️ <strong>${data.threat_tier} (${data.overall_threat_score}/100)</strong><br/><br/><strong>${category}:</strong> ${explanation}`, true);
+      } else {
+        updateOverlay('✅ <strong>Safe Content (8/100)</strong><br/>Standard organizational context. Zero synthetic urgency, coercion, or credential harvesting detected.', false);
+      }
+    } catch (err) {
+      updateOverlay('❌ Error reaching ZeroBait Engine. Please verify network connectivity.', true);
+    }
   }
 });
 

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: zerobait
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Lock, Mail, ArrowRight, UserCheck, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
+import { API_BASE } from '../config/api';
 
 interface AuthPageProps {
   onLoginSuccess: (role: string, email: string) => void;
@@ -21,7 +22,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBackToLand
 
     try {
       // Real cookie-based JWT authentication request
-      const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const res = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Receives and persists HttpOnly JWT cookie in the browser

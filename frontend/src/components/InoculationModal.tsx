@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { InoculationData, VerificationResponse } from '../types/message';
 import { ShieldCheck, X, CheckCircle2, AlertOctagon, HelpCircle, Award, ArrowRight } from 'lucide-react';
+import { API_BASE } from '../config/api';
 
 interface InoculationModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const InoculationModal: React.FC<InoculationModalProps> = ({
     if (selectedOption === null) return;
     setIsVerifying(true);
     try {
-      const res = await fetch('http://localhost:8000/api/v1/inoculate/verify', {
+      const res = await fetch(`${API_BASE}/inoculate/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

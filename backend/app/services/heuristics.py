@@ -1,4 +1,4 @@
-﻿import re
+import re
 from typing import Dict, List, Tuple, Any
 from ..core.models import MessagePayload, ChannelType, LegacyFilterResult, TextSpanHighlight
 
@@ -93,13 +93,12 @@ def check_domain_typosquatting(domain: str) -> Dict[str, Any]:
 
 def extract_urgency_spans(text: str) -> List[Tuple[int, int, str, str]]:
     urgency_patterns = [
-        (r"(?i)\bwithin \d+ (minutes|hours|mins)\b", "Artificial Urgency Deadline", "high"),
-        (r"(?i)\bimmediately\b", "High-Pressure Coercion", "medium"),
-        (r"(?i)\bbefore \d+(:\d+)?\s*(AM|PM|EST|PST|GMT)?\b", "Arbitrary Time Cutoff", "high"),
-        (r"(?i)\bpermanent (account suspension|termination|quarantine)\b", "Fear & Loss Coercion", "high"),
-        (r"(?i)\bemergency\b", "Crisis Exploitation", "medium"),
-        (r"(?i)\bright (away|now)\b", "Immediate Action Pressure", "medium"),
-        (r"(?i)\bconfidential|discreet|don't discuss\b", "Secrecy & Isolation Tactic", "high")
+        (r"(?i)\bwithin \d+ (minutes|hours|days|mins|secs)\b", "Artificial Urgency Deadline", "high"),
+        (r"(?i)\b(immediately|right away|right now|urgent(ly)?|asap|time-sensitive|hurry|at once)\b", "High-Pressure Coercion", "high"),
+        (r"(?i)\b(before \d+(:\d+)?\s*(AM|PM|EST|PST|GMT)?|today only|final notice|final warning|last chance|act now|expires?|expiring|expiration)\b", "Arbitrary Time Cutoff", "high"),
+        (r"(?i)\b(suspend(ed|ing)?|deactivat(ed|ing)?|terminat(ed|ing)?|block(ed|ing)?|quarantin(ed|ing)?|freez(e|ing)|frozen|fraud(ulent)?|lock(ed|out)?|compromis(ed|ing)?|unauthorized|breach|penalt(y|ies)|legal action|arrest|restricted?|restriction|failed (delivery|attempt)|delivery (issue|problem|failure)|unpaid|overdue)\b", "Fear & Loss Coercion", "high"),
+        (r"(?i)\b(emergency|critical security alert|unauthorized sign-in)\b", "Crisis Exploitation", "high"),
+        (r"(?i)\b(confidential|discreet|don't discuss|keep this quiet|between us|do not tell)\b", "Secrecy & Isolation Tactic", "high")
     ]
     spans = []
     for pattern, vector, severity in urgency_patterns:
@@ -109,8 +108,12 @@ def extract_urgency_spans(text: str) -> List[Tuple[int, int, str, str]]:
 
 def extract_sop_anomalies(text: str) -> List[Tuple[int, int, str, str]]:
     sop_patterns = [
+        (r"(?i)\b((verify|confirm|update|validate|reset|restore)\s+(your\s+)?(account|identity|credentials|password|banking|payment|billing|email|pin|details|access))\b", "Credential Harvesting Lure", "high"),
+        (r"(?i)\b(click\s+(here|the link|below|to verify|to update|to claim|to continue|to log\s*in)|follow\s+this\s+link|tap\s+the\s+link|download\s+attachment)\b", "Unverified Action Prompt", "high"),
         (r"(?i)\b(wire of \$[\d,]+|\bwire transfer\b|\bupdated routing coordinates\b)", "Out-of-Band Financial Wire Request", "high"),
-        (r"(?i)\b(gift cards?|e-gift cards?|Apple digital gift)\b", "Irrevocable Asset Extraction (Gift Cards)", "high"),
+        (r"(?i)\b(gift cards?|e-gift cards?|apple (gift|digital)|google play card|steam card|crypto|bitcoin|btc|eth|moneygram|western union)\b", "Irrevocable Asset Extraction", "high"),
+        (r"(?i)\b(package|parcel|shipment|delivery)\s+(is\s+pending|failed|on\s+hold|requires\s+action|redelivery|fee)\b", "Package Delivery Smishing Vector", "high"),
+        (r"(?i)\b(claim\s+(your\s+)?(reward|prize|voucher|gift|refund)|you('ve)?\s+(won|been\s+selected)|lottery\s+winner)\b", "Social Engineering Bounty Scam", "high"),
         (r"(?i)\b(rather than opening an internal Jira ticket|don't discuss this in public channels)\b", "Explicit SOP Channel Bypass", "high"),
         (r"(?i)\b(send it directly to my personal (advisory )?address:?\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+)\b", "Exfiltration to Personal Email", "high"),
         (r"(?i)\b(re-validate their Active Directory session token|re-authenticate)\b", "Credential Harvesting Vector", "high")
